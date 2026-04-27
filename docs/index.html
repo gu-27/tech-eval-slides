@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navigating Emerging Technology — A Framework for Business Leaders</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:   #0f1629;
+      --navy2:  #1a2540;
+      --blue:   #4f8ef7;
+      --teal:   #2dd4bf;
+      --amber:  #fbbf24;
+      --rose:   #f87171;
+      --violet: #a78bfa;
+      --green:  #4ade80;
+      --slate:  #f0f4ff;
+      --white:  #ffffff;
+      --muted:  #94a3b8;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy); overflow-x: hidden; }
+
+    /* ── SLIDES ── */
+    .slide {
+      min-height: 100vh; display: flex; align-items: center;
+      position: relative; overflow: hidden;
+      padding: 5rem 6rem;
+    }
+    .slide-inner { width: 100%; max-width: 1100px; margin: 0 auto; position: relative; z-index: 2; }
+
+    /* Background variants */
+    .bg-navy   { background: var(--navy); }
+    .bg-navy2  { background: var(--navy2); }
+    .bg-slate  { background: var(--slate); }
+    .bg-white  { background: var(--white); }
+    .bg-blue   { background: #1a2f5e; }
+    .bg-teal   { background: #0d3535; }
+    .bg-amber  { background: #2a1f00; }
+    .bg-violet { background: #1a1040; }
+    .bg-green  { background: #0a2a1a; }
+
+    /* ── NAV DOTS ── */
+    .nav-dots {
+      position: fixed; right: 1.75rem; top: 50%;
+      transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: .6rem; z-index: 100;
+    }
+    .nav-dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: rgba(255,255,255,.25); border: none;
+      cursor: pointer; transition: all .25s; padding: 0;
+    }
+    .nav-dot.active { background: white; transform: scale(1.4); }
+    .nav-dot:hover { background: rgba(255,255,255,.6); }
+
+    /* ── SLIDE NUMBER ── */
+    .slide-num {
+      font-size: .65rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+      opacity: .35; margin-bottom: .75rem;
+    }
+    .slide-num.dark { color: var(--navy); }
+    .slide-num.light { color: white; }
+
+    /* ── EYEBROW / LABEL ── */
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-size: .68rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+      padding: .3rem .9rem; border-radius: 999px; margin-bottom: 1.25rem;
+    }
+    .eyebrow.blue   { background: rgba(79,142,247,.2);  color: #7eb0ff; }
+    .eyebrow.teal   { background: rgba(45,212,191,.2);  color: #5de8d4; }
+    .eyebrow.amber  { background: rgba(251,191,36,.2);  color: #fcd34d; }
+    .eyebrow.rose   { background: rgba(248,113,113,.2); color: #fca5a5; }
+    .eyebrow.violet { background: rgba(167,139,250,.2); color: #c4b5fd; }
+    .eyebrow.green  { background: rgba(74,222,128,.2);  color: #86efac; }
+    .eyebrow.navy   { background: rgba(79,142,247,.15); color: var(--blue); }
+    .eyebrow.dark   { background: rgba(15,22,41,.12);   color: var(--navy2); }
+
+    /* ── HEADINGS ── */
+    h1.display {
+      font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 900; line-height: 1.0;
+      letter-spacing: -.04em; color: white;
+    }
+    h2.title {
+      font-size: clamp(2rem, 4vw, 3.6rem); font-weight: 900; line-height: 1.1;
+      letter-spacing: -.03em;
+    }
+    h2.title.light { color: white; }
+    h2.title.dark  { color: var(--navy); }
+    h3.sub { font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+
+    /* ── BODY TEXT ── */
+    .lead {
+      font-size: clamp(1rem, 1.8vw, 1.25rem); line-height: 1.8; max-width: 640px;
+    }
+    .lead.light { color: rgba(255,255,255,.7); }
+    .lead.dark  { color: #475569; }
+    .body { font-size: .95rem; line-height: 1.8; }
+    .body.light { color: rgba(255,255,255,.65); }
+    .body.dark  { color: #475569; }
+
+    /* ── DEFINITION BOX ── */
+    .def-box {
+      border-left: 3px solid; border-radius: 0 10px 10px 0;
+      padding: 1.25rem 1.5rem; margin: 1.5rem 0;
+    }
+    .def-box.blue   { border-color: var(--blue);   background: rgba(79,142,247,.08); }
+    .def-box.teal   { border-color: var(--teal);   background: rgba(45,212,191,.08); }
+    .def-box.amber  { border-color: var(--amber);  background: rgba(251,191,36,.08); }
+    .def-box.rose   { border-color: var(--rose);   background: rgba(248,113,113,.08); }
+    .def-box.violet { border-color: var(--violet); background: rgba(167,139,250,.08); }
+    .def-box.green  { border-color: var(--green);  background: rgba(74,222,128,.08); }
+    .def-box .def-label {
+      font-size: .6rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase;
+      margin-bottom: .4rem; opacity: .6;
+    }
+    .def-box p { font-size: .95rem; color: rgba(255,255,255,.85); line-height: 1.7; }
+    .def-box.on-light p { color: var(--navy2); }
+    .def-box.on-light .def-label { color: var(--navy); }
+
+    /* ── TWO-COL LAYOUT ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+    .two-col-wide { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; }
+
+    /* ── STAT CARDS ── */
+    .stat-row { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 2rem; }
+    .stat-card {
+      flex: 1; min-width: 160px;
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 14px; padding: 1.25rem 1.5rem;
+    }
+    .stat-val { font-size: 2.2rem; font-weight: 900; line-height: 1; }
+    .stat-label { font-size: .72rem; color: rgba(255,255,255,.45); text-transform: uppercase; letter-spacing: .08em; margin-top: .35rem; }
+
+    /* ── FRAMEWORK STEPS ── */
+    .framework-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-top: 2rem;
+    }
+    .fw-step {
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 14px; padding: 1.5rem 1.25rem; text-align: center; position: relative;
+    }
+    .fw-step::after {
+      content: '→'; position: absolute; right: -.85rem; top: 50%; transform: translateY(-50%);
+      font-size: 1.1rem; color: rgba(255,255,255,.2); font-weight: 700;
+    }
+    .fw-step:last-child::after { display: none; }
+    .fw-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; font-weight: 900; color: var(--navy); margin: 0 auto .85rem;
+    }
+    .fw-step h4 { font-size: .85rem; font-weight: 800; color: white; margin-bottom: .35rem; }
+    .fw-step p  { font-size: .72rem; color: rgba(255,255,255,.5); line-height: 1.55; }
+
+    /* ── ADOPTER CATEGORIES ── */
+    .adopter-row {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: .75rem; margin-top: 2rem;
+    }
+    .adopter-card {
+      border-radius: 12px; padding: 1.25rem 1rem; text-align: center;
+    }
+    .adopter-card .pct { font-size: 1.6rem; font-weight: 900; line-height: 1; }
+    .adopter-card .name { font-size: .75rem; font-weight: 700; margin-top: .35rem; letter-spacing: .03em; }
+    .adopter-card .desc { font-size: .68rem; margin-top: .35rem; opacity: .65; line-height: 1.4; }
+
+    /* ── HYPE CURVE SVG container ── */
+    .curve-wrap { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 1.5rem; }
+
+    /* ── EXAMPLE TAGS ── */
+    .tag-row { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+    .tag {
+      font-size: .75rem; font-weight: 600; padding: .35rem .85rem; border-radius: 999px;
+      background: rgba(255,255,255,.08); color: rgba(255,255,255,.7);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    /* ── XR CARDS ── */
+    .xr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 1.5rem; }
+    .xr-card { border-radius: 14px; padding: 1.75rem 1.5rem; }
+
+    /* ── CAREER PILLARS ── */
+    .pillar-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2rem; }
+    .pillar {
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 14px; padding: 1.5rem;
+    }
+    .pillar-icon { font-size: 1.75rem; margin-bottom: .75rem; }
+    .pillar h4 { font-size: .9rem; font-weight: 800; color: white; margin-bottom: .4rem; }
+    .pillar p { font-size: .78rem; color: rgba(255,255,255,.55); line-height: 1.65; }
+
+    /* ── CLOSING GRID ── */
+    .closing-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-top: 2.5rem; }
+    .closing-card {
+      border-radius: 12px; padding: 1.25rem 1rem; text-align: center;
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+    }
+    .closing-card .num { font-size: 2rem; font-weight: 900; line-height: 1; }
+    .closing-card h4 { font-size: .78rem; font-weight: 700; color: white; margin-top: .4rem; }
+    .closing-card p { font-size: .68rem; color: rgba(255,255,255,.45); margin-top: .3rem; line-height: 1.5; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .slide { padding: 4rem 2.5rem; }
+      .two-col, .two-col-wide { grid-template-columns: 1fr; gap: 3rem; }
+      .framework-grid { grid-template-columns: repeat(3, 1fr); }
+      .fw-step::after { display: none; }
+      .adopter-row { grid-template-columns: repeat(3, 1fr); }
+      .closing-grid { grid-template-columns: repeat(3, 1fr); }
+      .nav-dots { display: none; }
+      h1.display { font-size: 2.8rem; }
+    }
+    @media (max-width: 600px) {
+      .slide { padding: 3rem 1.5rem; }
+      .framework-grid { grid-template-columns: 1fr 1fr; }
+      .adopter-row { grid-template-columns: 1fr 1fr; }
+      .xr-grid, .pillar-row { grid-template-columns: 1fr; }
+      .closing-grid { grid-template-columns: 1fr 1fr; }
+      .stat-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV DOTS ── -->
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SLIDE 1 — COVER -->
+<!-- ══════════════════════════════════════════ -->
+<section class="slide bg-navy" id="slide-1" data-label="Cover">
+  <!-- Background grid -->
+  <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(79,142,247,.1) 1px,transparent 1px);background-size:42px 42px;pointer-events:none;"></div>
+  <!-- Accent glow -->
+  <div style="position:absolute;top:-20%;right:-10%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(79,142,247,.12) 0%,transparent 70%);pointer-events:none;"></div>
+
+  <div class="slide-inner">
+    <div class="slide-num light">Gonzaga University · School of Business Administration</div>
+    <div style="display:inline-flex;align-items:center;gap:.6rem;background:rgba(79,142,247,.15);border:1px solid rgba(79,142,247,.3);border-radius:999px;padding:.4rem 1rem;margin-bottom:2rem;">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--blue);display:inline-block;"></span>
+      <span style="font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#7eb0ff;">Emerging Technology for Business Leaders</span>
+    </div>
+    <h1 class="display" style="margin-bottom:1.5rem;">
+      Why Technology<br>Evaluation Matters<span style="color:var(--blue);">.</span>
+    </h1>
+    <p class="lead light" style="max-width:620px;margin-bottom:3rem;">
+      A framework for understanding, assessing, and adapting to emerging technologies — so you can lead with confidence in any industry.
+    </p>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:rgba(255,255,255,.45);">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--blue);"></span>10 Core Concepts
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:rgba(255,255,255,.45);">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--teal);"></span>1 Evaluation Framework
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:rgba(255,255,255,.45);">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--amber);"></span>Real-World Application
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SLIDE 2 — WHY EVALUATE -->
+<!-- ══════════════════════════════════════════ -->
+<section class="slide bg-blue" id="slide-2" data-label="Why Evaluate">
+  <div class="slide-inner">
+    <div class="two-col">
+      <div>
+        <div class="slide-num light">01 / The Case for Evaluation</div>
+        <h2 class="title light" style="margin-bottom:1rem;">Technology moves fast.<br>Business decisions are permanent.</h2>
+        <p class="lead light" style="margin-bottom:1.5rem;">
+          Every business decision you make will be shaped by technology. The question is not whether to engage with emerging tech — it is how to evaluate it wisely.
+        </p>
+        <p class="body light">
+          Leaders who lack a framework for evaluating technology either over-invest in hype or under-invest in disruption. Both are costly.
+        </p>
+      </div>
+      <div>
+        <div class="stat-row" style="flex-direction:column;">
+          <div class="stat-card">
+            <div class="stat-val" style="color:var(--blue);">70%</div>
+            <div class="stat-label">of digital transformation projects fail to meet their goals</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" style="color:var(--amber);">$2.3T</div>
+            <div class="stat-label">wasted globally on failed IT projects annually</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" style="color:var(--teal);">52%</div>
+            <div class="stat-label">of Fortune 500 companies from 2000 no longer exist</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SLIDE 3 — THE FRAMEWORK -->
+<!-- ══════════════════════════════════════════ -->
+<section class="slide bg-navy" id="slide-3" data-label="The Framework">
+  <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(45,212,191,.08) 1px,transparent 1px);background-size:36px 36px;pointer-events:none;"></div>
+  <div class="slide-inner">
+    <div class="slide-num light">02 / Your Evaluation Framework</div>
+    <h2 class="title light" style="margin-bottom:.6rem;">A Framework for Evaluating <span style="color:var(--teal);">Any</span> Technology</h2>
+    <p class="body light" style="margin-bottom:.5rem;max-width:640px;">Apply these five questions to every emerging technology you encounter — in class, in your career, and in the boardroom.</p>
+
+    <div class="framework-grid">
+      <div class="fw-step">
+        <div class="fw-num" style="background:var(--blue);">1</div>
+        <h4>Define It</h4>
+        <p>What exactly is this technology and what problem does it solve?</p>
+      </div>
+      <div class="fw-step">
+        <div class="fw-num" style="background:var(--teal);">2</div>
+        <h4>Locate It</h4>
+        <p>Where is it on the adoption curve and hype cycle?</p>
+      </div>
+      <div class="fw-step">
+        <div class="fw-num" style="background:var(--amber);">3</div>
+        <h4>Map the Impact</h4>
+        <p>Who does it disrupt? What industries and roles are affected?</p>
+      </div>
+      <div class="fw-step">
+        <div class="fw-num" style="background:var(--rose);">4</div>
+        <h4>Assess the Timeline</h4>
+        <p>When will it be mainstream? How fast is adoption moving?</p>
+      </div>
+      <div class="fw-step">
+        <div class="fw-num" style="background:var(--violet);">5</div>
+        <h4>Build Fluency</h4>
+        <p>What do I need to learn to stay relevant and competitive?</p>
+      </div>
+    </div>
+
+    <p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:1.5rem;font-style:italic;">The following slides introduce 10 key concepts that power this framework.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SLIDE 4 — EMERGING TECHNOLOGY -->
+<!-- ══════════════════════════════════════════ -->
+<section class="slide bg-slate" id="slide-4" data-label="Emerging Technology">
+  <div class="slide-inner">
+    <div class="two-col-wide">
+      <div>
+        <div class="slide-num dark">03 / Concept 1</div>
+        <div class="eyebrow dark">Framework Step 1 — Define It</div>
+        <h2 class="title dark" style="margin-bottom:1rem;">Emerging Technology</h2>
+        <div class="def-box blue on-light">
+          <div class="def-label" style="color:var(--blue);">Definition</div>
+          <p style="color:var(--navy);">New or developing technologies with the potential to disrupt industries or create entirely new markets.</p>
+        </div>
+        <p class="body dark" style="margin-bottom:1rem;">
+          Not all new technology is truly "emerging." The term refers specifically to technologies in early development that carry <strong style="color:var(--navy);">transformative potential</strong> — but whose full impact is still uncertain.
+        </p>
+        <p class="body dark">
+          Evaluating emerging technology requires separating signal from noise — distinguishing technologies with genuine staying power from those that will fade.
+        </p>
+      </div>
+      <div>
+        <div style="background:white;border-radius:20px;padding:2rem;box-shadow:0 4px 24px rgba(15,22,41,.08);">
+          <div style="font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8;margin-bottom:1.25rem;">Examples Across Eras</div>
+          <div style="display:flex;flex-direction:column;gap:.85rem;">
+            <div style="display:flex;align-items:center;gap:1rem;padding:.85rem 1rem;background:#f8fafc;border-radius:10px;">
+              <div style="width:36px;height:36px;border-radius:9px;background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;">🌐</div>
+              <div><div style="font-size:.82rem;font-weight:700;color:var(--navy);">The Internet (1990s)</div><div style="font-size:.72rem;color:#94a3b8;">Disrupted media, retail, communication</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:1rem;padding:.85rem 1rem;background:#f8fafc;border-radius:10px;">
+              <div style="width:36px;height:36px;border-radius:9px;background:rgba(45,212,191,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;">📱</div>
+              <div><div style="font-size:.82rem;font-weight:700;color:var(--navy);">Smartphones (2007+)</div><div style="font-size:.72rem;color:#94a3b8;">Created entirely new industries and behaviors</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:1rem;padding:.85rem 1rem;background:#f8fafc;border-radius:10px;">
+              <div style="width:36px;height:36px;border-radius:9px;background:rgba(251,191,36,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;">🤖</div>
+              <div><div style="font-size:.82rem;font-weight:700;color:var(--navy);">Generative AI (2022+)</div><div style="font-size:.72rem;color:#94a3b8;">Reshaping knowledge work across every sector</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:1rem;padding:.85rem 1rem;background:#f8fafc;border-radius:10px;">
+              <div style="width:36px;height:36px;border-radius:9px;background:rgba(167,139,250,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;">⚛️</div>
+              <div><div style="font-size:.82rem;font-weight:700;color:var(--navy);">Quantum Computing (emerging)</div><div style="font-size:.72rem;color:#94a3b8;">Potential to transform cryptography, logistics, drug discovery</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SLIDE 5 — DIGITAL FLUENCY -->
+<!-- ══════════════════════════════════════════ -->
+<section class="slide bg-navy2" id="slide-5" data-label="Digital Fluency">
+  <div class="slide-inner">
+    <div class="two-col">
+      <div>
+        <div class="slide-num light">04 / Concept 2</div>
+        <div class="eyebrow teal">Framework Step 5 — Build Fluency</div>
+        <h2 class="title light" style="margin-bottom:1rem;">Digital Fluency</h2>
+        <div class="def-box teal">
+          <div class="def-label" style="color:var(--teal);">Definition</div>
+          <p>The ability to evaluate, adopt, and adapt to digital technologies with confidence — going beyond basic literacy to active, strategic engagement.</p>
+        </div>
+        <p class="body light">
+          Digital literacy means you can <em>use</em> technology. Digital fluency means you can <strong style="color:white;">evaluate</strong> it, <strong style="color:white;">question</strong> it, and make strategic decisions about it — even when it's unfamiliar.
+        </p>
+      </div>
+      <div>
+        <div style="display:flex;flex-direction:column;gap:1rem;margin-top:.5rem;">
+          <div style="border-radius:12px;padding:1.25rem 1.5rem;border:1px solid rgba(45,212,191,.25);background:rgba(45,212,191,.06);">
+            <div style="font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);margin-bottom:.5rem;">Literacy (baseline)</div>
+            <p style="font-size:.875rem;color:rgba(255,255,255,.6);line-height:1.65;">Can use existing tools. Follows instructions. Dependent on others for evaluation.</p>
+          </div>
+          <div style="text-align:center;font-size:.75rem;color:rgba(255,255,255,.25);">↓ &nbsp; Grows into</div>
+          <div style="border-radius:12px;padding:1.25rem 1.5rem;border:1px solid rgba(45,212,191,.5);background:rgba(45,212,191,.12);">
+            <div style="font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);margin-bottom:.5rem;">Fluency (goal)</div>
+            <p style="font-size:.875rem;color:rgba(255,255,255,.75);line-height:1.65;">Evaluates new tools independently. Asks the right questions. Adapts to change with confidence and leads others through it.</p>
+          </div>
+        </div>
+        <div style="margin-top:1.25rem;padding:1rem 1.25rem;background:rgba(255,255,255,.04);border-radius:10px;border:1px solid rgba(255,255,255,.08);">
+          <p style="font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.65;font-style:italic;">"The illiterate of the 21st century will not be those who cannot read and write, but those who cannot learn, unlearn, and relearn." — Alvin Toffler</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SLIDE 6 — TECHNOLOGY ROADMAP -->
+<!-- ══════════════════════════════════════════ -->
+<section class="slide bg-slate" id="slide-6" data-label="Technology Roadmap">
+  <div class="slide-inner">
+    <div class="slide-num dark">05 / Concept 3</div>
+    <div class="eyebrow dark">Framework Step 4 — Assess the Timeline</div>
+    <h2 class="title dark" style="margin-bottom:1rem;">Technology Roadmap</h2>
+    <div class="two-col">
+      <div>
+        <div class="def-box blue on-light">
+          <div class="def-label" style="color:var(--blue);">Definition</div>
+          <p style="color:var(--navy);">A strategic planning tool that outlines how technology capabilities will evolve over time — aligning technology decisions with business objectives.</p>
+        </div>
+        <p class="body dark" style="margin-bottom:1rem;">
+          A roadmap answers the question: <strong style="color:var(--navy);">"When do we need to act?"</strong> It helps leaders sequence technology investments and avoid both premature adoption and costly delay.
+        </p>
+        <p class="body dark">
+          Roadmaps are used by organizations to plan infrastructure upgrades, software adoption, and capability development across months and years.
+        </p>
+      </div>
+      <div>
+        <!-- Simple roadmap visual -->
+        <div style="background:white;border-radius:16px;padding:1.75rem;box-shadow:0 4px 24px rgba(15,22,41,.08);">
+          <div style="font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8;margin-bottom:1.25rem;">Sample Technology Roadmap</div>
+          <div style="display:flex;flex-direction:column;gap:.85rem;">
+            <div style="display:flex;gap:.75rem;align-items:center;">
+              <div style="min-width:60px;font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;">Now</div>
+              <div style="flex:1;background:#eff6ff;border-radius:8px;padding:.6rem .9rem;">
+                <div style="font-size:.8rem;font-weight:700;color:var(--navy);">AI Literacy Training</div>
+                <div style="font-size:.7rem;color:#64748b;">Foundational capability across team</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:.75rem;align-items:center;">
+              <div style="min-width:60px;font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;">6 Mo</div>
+              <div style="flex:1;background:#f0fdf4;border-radius:8px;padding:.6rem .9rem;">
+                <div style="font-size:.8rem;font-weight:700;color:var(--navy);">Workflow Automation Pilots</div>
+                <div style="font-size:.7rem;color:#64748b;">3 departments test AI-assisted processes</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:.75rem;align-items:center;">
+              <div style="min-width:60px;font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;">1 Year</div>
+              <div style="flex:1;background:#fefce8;border-radius:8px;padding:.6rem .9rem;">
+                <div style="font-size:.8rem;font-weight:700;color:var(--navy);">Enterprise AI Integration</div>
+                <div style="font-size:.7rem;color:#64748b;">Scale successful pilots org-wide</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:.75rem;align-items:center;">
+              <div style="min-width:60px;font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;">3 Year</div>
+              <div style="flex:1;background:#f5f3ff;border-radius:8px;padding:.6rem .9rem;">
+                <div style="font-size:.8rem;font-weight:700;color:var(--navy);">Predictive Intelligence Platform</div>
+                <div style="font-size:.7rem;color:#64748b;">Strategic decision-making driven by AI insights</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SLIDE 7 — DISRUPTIVE INNOVATION -->
+<!-- ══════════════════════════════════════════ -->
+<section class="slide bg-amber" id="slide-7" data-label="Disruptive Innovation">
+  <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(251,191,36,.1) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;"></div>
+  <div class="slide-inner">
+    <div class="two-col">
+      <div>
+        <div class="slide-num light">06 / Concept 4</div>
+        <div class="eyebrow amber">Framework Step 3 — Map the Impact</div>
+        <h2 class="title light" style="margin-bottom:1rem;">Disruptive Innovation</h2>
+        <div class="def-box amber">
+          <div class="def-label" style="color:var(--amber);">Definition</div>
+          <p>Technologies or business models that fundamentally change how industries operate — displacing established incumbents and creating new market leaders.</p>
+        </div>
+        <p class="body light" style="margin-bottom:1rem;">
+          Coined by Clayton Christensen, disruption typically starts at the low end or edges of a market before moving upmarket. Incumbents often ignore it — until it is too late.
+        </p>
+        <p class="body light" style="font-style:italic;opacity:.7;">"Disruption is not about technology. It's about the business model change technology enables."</p>
+      </div>
+      <div>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div style="font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(251,191,36,.6);margin-bottom:.25rem;">Who Got Disrupted — and By What</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+            <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:1rem;border:1px solid rgba(255,255,255,.1);">
+              <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:.3rem;">Disrupted</div>
+              <div style="font-weight:700;color:white;font-size:.9rem;">Blockbuster</div>
+              <div style="font-size:.72rem;color:var(--amber);margin-top:.2rem;">↓ Netflix (streaming)</div>
+            </div>
+            <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:1rem;border:1px solid rgba(255,255,255,.1);">
+              <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:.3rem;">Disrupted</div>
+              <div style="font-weight:700;color:white;font-size:.9rem;">Taxi Industry</div>
+              <div style="font-size:.72rem;color:var(--amber);margin-top:.2rem;">↓ Uber, Lyft (platforms)</div>
+            </div>
+            <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:1rem;border:1px solid rgba(255,255,255,.1);">
+              <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:.3rem;">Disrupted</div>
+              <div style="font-weight:700;color:white;font-size:.9rem;">Print Media</div>
+              <div style="font-size:.72rem;color:var(--amber);margin-top:.2rem;">↓ Digital / Social Media</div>
+            </div>
+            <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:1rem;border:1px solid rgba(255,255,255,.1);">
+              <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:.3rem;">Disrupted</div>
+              <div style="font-weight:700;color:white;font-size:.9rem;">Traditional Banking</div>
+              <div style="font-size:.72rem;color:var(--amber);margin-top:.2rem;">↓ Fintech / Crypto</div>
+            </div>
+          </div>
+          <div style="background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.25);border-radius:10px;padding:1rem 1.25rem;">
+            <p style="font-size:.82rem;color:rgba(255,255,255,.7);line-height:1.65;"><strong style="color:var(--amber);">Key insight:</strong> Disruption rarely looks threatening at first. It starts in markets incumbents don't value — then moves up.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SLIDE 8 — TECHNOLOGY ADOPTION LIFECYCLE -->
+<!-- ══════════════════════════════════════════ -->
+<section class="slide bg-slate" id="slide-8" data-label="Adoption Lifecycle">
+  <div class="slide-inner">
+    <div class="slide-num dark">07 / Concept 5</div>
+    <div class="eyebrow dark">Framework Step 2 — Locate It</div>
+    <h2 class="title dark" style="margin-bottom:.5rem;">Technology Adoption Lifecycle</h2>
+    <div class="def-box blue on-light" style="margin-bottom:1.5rem;max-width:680px;">
+      <div class="def-label" style="color:var(--blue);">Definition</div>
+      <p style="color:var(--navy);">A model describing how innovations spread across five adopter categories — from early risk-takers to the last wave of mainstream users.</p>
+    </div>
+
+    <!-- Bell curve SVG -->
+    <div style="margin-bottom:1.5rem;">
+      <svg viewBox="0 0 700 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;">
+        <defs>
+          <linearGradient id="bellGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="#4f8ef7"/>
+            <stop offset="25%"  stop-color="#2dd4bf"/>
+            <stop offset="50%"  stop-color="#4ade80"/>
+            <stop offset="75%"  stop-color="#fbbf24"/>
+            <stop offset="100%" stop-color="#f87171"/>
+          </linearGradient>
+        </defs>
+        <path d="M0,110 C40,110 60,20 100,15 C140,10 160,60 200,60 C240,60 260,10 350,5 C440,0 460,60 500,60 C540,60 560,10 600,15 C640,20 660,110 700,110 Z" fill="url(#bellGrad)" opacity=".25"/>
+        <path d="M0,110 C40,110 60,20 100,15 C140,10 160,60 200,60 C240,60 260,10 350,5 C440,0 460,60 500,60 C540,60 560,10 600,15 C640,20 660,110 700,110" fill="none" stroke="url(#bellGrad)" stroke-width="2.5"/>
+        <!-- dividers -->
+        <line x1="140" y1="10" x2="140" y2="110" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="280" y1="10" x2="280" y2="110" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="490" y1="10" x2="490" y2="110" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="600" y1="10" x2="600" y2="110" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3"/>
+      </svg>
+    </div>
+
+    <div class="adopter-row">
+      <div class="adopter-card" style="background:#eff6ff;">
+        <div class="pct" style="color:#4f8ef7;">2.5%</div>
+        <div class="name" style="color:var(--navy);">Innovators</div>
+        <div class="desc" style="color:#64748b;">Risk-takers. First to try anything new.</div>
+      </div>
+      <div class="adopter-card" style="background:#f0fdf4;">
+        <div class="pct" style="color:#22c55e;">13.5%</div>
+        <div class="name" style="color:var(--navy);">Early Adopters</div>
+        <div class="desc" style="color:#64748b;">Opinion leaders. Embrace change strategically.</div>
+      </div>
+      <div class="adopter-card" style="background:#fefce8;">
+        <div class="pct" style="color:#ca8a04;">34%</div>
+        <div class="name" style="color:var(--navy);">Early Majority</div>
+        <div class="desc" style="color:#64748b;">Pragmatists. Adopt once proven.</div>
+      </div>
+      <div class="adopter-card" style="background:#fff7ed;">
+        <div class="pct" style="color:#ea580c;">34%</div>
+        <div class="name" style="color:var(--navy);">Late Majority</div>
+        <div class="desc" style="color:#64748b;">Skeptics. Adopt due to pressure or necessity.</div>
+      </div>
+      <div class="adopter-card" style="background:#fef2f2;">
+        <div class="pct" style="color:#ef4444;">16%</div>
+        <div class="name" style="color:var(--navy);">Laggards</div>
+        <div class="desc" style="color:#64748b;">Last to adopt. Often resistance is cultural.</div>
+      </div>
+    </div>
+    <p style="font-size:.78rem;color:#94a3b8;margin-top:1rem;font-style:italic;">The "Chasm" (Geoffrey Moore): the gap between Early Adopters and the Early Majority is where most technologies fail to scale.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SLIDE 9 — HYPE CYCLE -->
+<!-- ══════════════════════════════════════════ -->
+<section class="slide bg-navy2" id="slide-9" data-label="Hype Cycle">
+  <div class="slide-inner">
+    <div class="slide-num light">08 / Concept 6</div>
+    <div class="eyebrow violet">Framework Step 2 — Locate It</div>
+    <h2 class="title light" style="margin-bottom:.5rem;">The Hype Cycle</h2>
+    <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:4rem;align-items:center;">
+      <div>
+        <div class="def-box violet" style="margin-bottom:1.25rem;">
+          <div class="def-label" style="color:var(--violet);">Definition</div>
+          <p>A framework by Gartner describing the five stages of emerging technology adoption — from inflated expectations through disillusionment to eventual productive use.</p>
+        </div>
+        <p class="body light" style="margin-bottom:1.25rem;">The Hype Cycle helps leaders answer the question: <strong style="color:white;">"Is this technology where the headlines say it is?"</strong></p>
+        <div style="display:flex;flex-direction:column;gap:.6rem;">
+          <div style="display:flex;align-items:center;gap:.75rem;"><div style="width:10px;height:10px;border-radius:50%;background:#4f8ef7;flex-shrink:0;"></div><p style="font-size:.82rem;color:rgba(255,255,255,.7);"><strong style="color:white;">Innovation Trigger</strong> — A breakthrough sparks media coverage and early interest</p></div>
+          <div style="display:flex;align-items:center;gap:.75rem;"><div style="width:10px;height:10px;border-radius:50%;background:#a78bfa;flex-shrink:0;"></div><p style="font-size:.82rem;color:rgba(255,255,255,.7);"><strong style="color:white;">Peak of Inflated Expectations</strong> — Hype exceeds reality; overinvestment follows</p></div>
+          <div style="display:flex;align-items:center;gap:.75rem;"><div style="width:10px;height:10px;border-radius:50%;background:#f87171;flex-shrink:0;"></div><p style="font-size:.82rem;color:rgba(255,255,255,.7);"><strong style="color:white;">Trough of Disillusionment</strong> — Failures emerge; interest drops sharply</p></div>
+          <div style="display:flex;align-items:center;gap:.75rem;"><div style="width:10px;height:10px;border-radius:50%;background:#fbbf24;flex-shrink:0;"></div><p style="font-size:.82rem;color:rgba(255,255,255,.7);"><strong style="color:white;">Slope of Enlightenment</strong> — Real-world benefits become clearer</p></div>
+          <div style="display:flex;align-items:center;gap:.75rem;"><div style="width:10px;height:10px;border-radius:50%;background:#4ade80;flex-shrink:0;"></div><p style="font-size:.82rem;color:rgba(255,255,255,.7);"><strong style="color:white;">Plateau of Productivity</strong> — Mainstream adoption, sustainable value</p></div>
+        </div>
+      </div>
+      <div class="curve-wrap">
+        <!-- Hype cycle SVG -->
+        <svg viewBox="0 0 380 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+          <!-- Axes -->
+          <line x1="30" y1="190" x2="370" y2="190" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
+          <line x1="30" y1="10"  x2="30"  y2="190" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
+          <!-- Axis labels -->
+          <text x="195" y="210" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="9" font-family="Inter,sans-serif">Time →</text>
+          <text x="12" y="105" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="9" font-family="Inter,sans-serif" transform="rotate(-90,12,105)">Expectations →</text>
+          <!-- Hype curve path -->
+          <path d="M30,175 C50,175 60,160 80,100 C100,40 115,15 130,18 C145,21 150,80 165,120 C180,155 195,148 230,140 C265,132 280,118 310,108 C335,100 355,95 370,90"
+                fill="none" stroke="url(#hypeGrad)" stroke-width="2.5" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="hypeGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%"   stop-color="#4f8ef7"/>
+              <stop offset="35%"  stop-color="#a78bfa"/>
+              <stop offset="50%"  stop-color="#f87171"/>
+              <stop offset="70%"  stop-color="#fbbf24"/>
+              <stop offset="100%" stop-color="#4ade80"/>
+            </linearGradient>
+          </defs>
+          <!-- Stage dots and labels -->
+          <circle cx="80"  cy="100" r="4" fill="#4f8ef7"/>
+          <circle cx="130" cy="18"  r="4" fill="#a78bfa"/>
+          <circle cx="165" cy="120" r="4" fill="#f87171"/>
+          <circle cx="265" cy="132" r="4" fill="#fbbf24"/>
+          <circle cx="360" cy="92"  r="4" fill="#4ade80"/>
+          <!-- Labels -->
+          <text x="50"  y="92"  fill="#4f8ef7"  font-size="7.5" font-family="Inter,sans-serif" text-anchor="middle">Innovation</text>
+          <text x="50"  y="101" fill="#4f8ef7"  font-size="7.5" font-family="Inter,sans-serif" text-anchor="middle">Trigger</text>
+          <text x="130" y="11"  fill="#a78bfa" font-size="7.5" font-family="Inter,sans-serif" text-anchor="middle">Peak</text>
+          <text x="165" y="140" fill="#f87171" font-size="7.5" font-family="Inter,sans-serif" text-anchor="middle">Trough</text>
+          <text x="265" y="125" fill="#fbbf24" font-size="7.5" font-family="Inter,sans-serif" text-anchor="middle">Slope</text>
+          <text x="358" y="85"  fill="#4ade80" font-size="7.5" font-family="Inter,sans-serif" text-anchor="end">Plateau</text>
+          <!-- AI example label -->
+          <text x="122" y="35" fill="rgba(255,255,255,.5)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-style="italic">Gen AI ~2023</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SLIDE 10 — BLOCKCHAIN -->
+<!-- ══════════════════════════════════════════ -->
+<section class="slide bg-teal" id="slide-10" data-label="Blockchain">
+  <div class="slide-inner">
+    <div class="two-col">
+      <div>
+        <div class="slide-num light">09 / Concept 7</div>
+        <div class="eyebrow teal">Framework — Define and Locate</div>
+        <h2 class="title light" style="margin-bottom:1rem;">Blockchain</h2>
+        <div class="def-box teal">
+          <div class="def-label" style="color:var(--teal);">Definition</div>
+          <p>A distributed ledger enabling secure, transparent, and tamper-resistant transactions — without requiring a central authority to verify or record them.</p>
+        </div>
+        <p class="body light" style="margin-bottom:1rem;">
+          Every transaction is grouped into a "block," cryptographically linked to the previous block, and replicated across thousands of nodes. Changing any record would require altering every subsequent block on every node simultaneously — making fraud effectively impossible.
+        </p>
+        <div style="padding:.9rem 1.25rem;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.25);border-radius:10px;">
+          <p style="font-size:.82rem;color:rgba(255,255,255,.7);line-height:1.65;"><strong style="color:var(--teal);">Hype Cycle status:</strong> Blockchain is navigating the Trough of Disillusionment — early cryptocurrency hype has faded, but real enterprise applications in supply chain, finance, and identity are gaining traction.</p>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(45,212,191,.6);margin-bottom:1rem;">Business Applications</div>
+        <div style="display:flex;flex-direction:column;gap:.85rem;">
+          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:1.1rem 1.25rem;border:1px solid rgba(255,255,255,.1);">
+            <div style="font-weight:700;color:white;font-size:.88rem;margin-bottom:.3rem;">Supply Chain Transparency</div>
+            <p style="font-size:.78rem;color:rgba(255,255,255,.55);line-height:1.6;">Walmart and IBM use blockchain to trace food origin from farm to shelf — reducing contamination response time from 7 days to 2 seconds.</p>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:1.1rem 1.25rem;border:1px solid rgba(255,255,255,.1);">
+            <div style="font-weight:700;color:white;font-size:.88rem;margin-bottom:.3rem;">Smart Contracts</div>
+            <p style="font-size:.78rem;color:rgba(255,255,255,.55);line-height:1.6;">Self-executing agreements that trigger automatically when conditions are met — removing intermediaries from real estate, insurance, and legal transactions.</p>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:1.1rem 1.25rem;border:1px solid rgba(255,255,255,.1);">
+            <div style="font-weight:700;color:white;font-size:.88rem;margin-bottom:.3rem;">Digital Identity</div>
+            <p style="font-size:.78rem;color:rgba(255,255,255,.55);line-height:1.6;">Secure, portable identity verification without dependence on government or corporate databases.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SLIDE 11 — QUANTUM COMPUTING -->
+<!-- ══════════════════════════════════════════ -->
+<section class="slide bg-violet" id="slide-11" data-label="Quantum Computing">
+  <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(167,139,250,.12) 1px,transparent 1px);background-size:38px 38px;pointer-events:none;"></div>
+  <div class="slide-inner">
+    <div class="two-col">
+      <div>
+        <div class="slide-num light">10 / Concept 8</div>
+        <div class="eyebrow violet">Framework — Define and Assess Timeline</div>
+        <h2 class="title light" style="margin-bottom:1rem;">Quantum Computing</h2>
+        <div class="def-box violet">
+          <div class="def-label" style="color:var(--violet);">Definition</div>
+          <p>A computing paradigm that uses principles of quantum mechanics — superposition and entanglement — to process information in fundamentally new ways, solving problems classical computers cannot.</p>
+        </div>
+        <p class="body light" style="margin-bottom:1rem;">
+          Classical computers use bits (0 or 1). Quantum computers use <strong style="color:white;">qubits</strong>, which can exist in multiple states simultaneously, enabling them to explore millions of solutions at once.
+        </p>
+        <div style="padding:.9rem 1.25rem;background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.25);border-radius:10px;">
+          <p style="font-size:.82rem;color:rgba(255,255,255,.7);line-height:1.65;"><strong style="color:var(--violet);">Timeline reality check:</strong> Quantum computing is on the Innovation Trigger phase of the Hype Cycle. Practical, widespread business applications are likely 10–15 years away — but the implications for cryptography and security are immediate planning concerns.</p>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(167,139,250,.6);margin-bottom:1rem;">Where It Will Matter Most</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85rem;">
+          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:1.25rem;border:1px solid rgba(255,255,255,.1);text-align:center;">
+            <div style="font-size:1.6rem;margin-bottom:.5rem;">💊</div>
+            <div style="font-size:.82rem;font-weight:700;color:white;">Drug Discovery</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.45);margin-top:.3rem;">Simulate molecular interactions classical computers cannot</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:1.25rem;border:1px solid rgba(255,255,255,.1);text-align:center;">
+            <div style="font-size:1.6rem;margin-bottom:.5rem;">🔐</div>
+            <div style="font-size:.82rem;font-weight:700;color:white;">Cryptography</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.45);margin-top:.3rem;">Current encryption standards may become vulnerable</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:1.25rem;border:1px solid rgba(255,255,255,.1);text-align:center;">
+            <div style="font-size:1.6rem;margin-bottom:.5rem;">📦</div>
+            <div style="font-size:.82rem;font-weight:700;color:white;">Logistics</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.45);margin-top:.3rem;">Solve optimization problems of extraordinary complexity</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:1.25rem;border:1px solid rgba(255,255,255,.1);text-align:center;">
+            <div style="font-size:1.6rem;margin-bottom:.5rem;">💰</div>
+            <div style="font-size:.82rem;font-weight:700;color:white;">Finance</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.45);margin-top:.3rem;">Portfolio optimization and risk modeling at massive scale</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SLIDE 12 — EXTENDED REALITY (XR) -->
+<!-- ══════════════════════════════════════════ -->
+<section class="slide bg-slate" id="slide-12" data-label="Extended Reality">
+  <div class="slide-inner">
+    <div class="slide-num dark">11 / Concept 9</div>
+    <div class="eyebrow dark">Framework — Define and Map the Impact</div>
+    <h2 class="title dark" style="margin-bottom:.5rem;">Extended Reality (XR)</h2>
+    <div class="def-box blue on-light" style="max-width:680px;margin-bottom:1.75rem;">
+      <div class="def-label" style="color:var(--blue);">Definition</div>
+      <p style="color:var(--navy);">An umbrella term for technologies that blend digital and physical environments — including Virtual Reality (VR), Augmented Reality (AR), and Mixed Reality (MR).</p>
+    </div>
+    <div class="xr-grid">
+      <div class="xr-card" style="background:#eff6ff;">
+        <div style="font-size:2rem;margin-bottom:.75rem;">🥽</div>
+        <div style="font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#4f8ef7;margin-bottom:.5rem;">Virtual Reality (VR)</div>
+        <p style="font-size:.875rem;font-weight:700;color:var(--navy);margin-bottom:.4rem;">Fully Immersive Digital World</p>
+        <p style="font-size:.78rem;color:#64748b;line-height:1.65;">Completely replaces physical environment. Applications: training simulations, medical procedures, architecture walkthroughs, immersive entertainment.</p>
+      </div>
+      <div class="xr-card" style="background:#f0fdf4;">
+        <div style="font-size:2rem;margin-bottom:.75rem;">📲</div>
+        <div style="font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#22c55e;margin-bottom:.5rem;">Augmented Reality (AR)</div>
+        <p style="font-size:.875rem;font-weight:700;color:var(--navy);margin-bottom:.4rem;">Digital Overlaid on Physical</p>
+        <p style="font-size:.78rem;color:#64748b;line-height:1.65;">Adds digital elements to the real world. Applications: retail try-ons, navigation overlays, surgical guidance, warehouse picking systems (Amazon, Boeing).</p>
+      </div>
+      <div class="xr-card" style="background:#f5f3ff;">
+        <div style="font-size:2rem;margin-bottom:.75rem;">🌐</div>
+        <div style="font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#7c3aed;margin-bottom:.5rem;">Mixed Reality (MR)</div>
+        <p style="font-size:.875rem;font-weight:700;color:var(--navy);margin-bottom:.4rem;">Digital Anchored to Physical</p>
+        <p style="font-size:.78rem;color:#64748b;line-height:1.65;">Digital objects interact with the physical world in real time. Applications: Microsoft HoloLens for engineering, remote expert assistance, spatial computing.</p>
+      </div>
+    </div>
+    <p style="font-size:.78rem;color:#94a3b8;margin-top:1.25rem;font-style:italic;">Business impact: XR is projected to reshape training, retail, healthcare, and remote collaboration — with the enterprise market expected to exceed $125 billion by 2030.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SLIDE 13 — CAREER AGILITY -->
+<!-- ══════════════════════════════════════════ -->
+<section class="slide bg-green" id="slide-13" data-label="Career Agility">
+  <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(74,222,128,.1) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;"></div>
+  <div class="slide-inner">
+    <div class="two-col-wide">
+      <div>
+        <div class="slide-num light">12 / Concept 10</div>
+        <div class="eyebrow green">Framework Step 5 — Build Fluency</div>
+        <h2 class="title light" style="margin-bottom:1rem;">Career Agility</h2>
+        <div class="def-box green">
+          <div class="def-label" style="color:var(--green);">Definition</div>
+          <p>The ability to pivot career paths and adapt to changing technological and market conditions — treating your career as a dynamic portfolio, not a fixed ladder.</p>
+        </div>
+        <p class="body light" style="margin-bottom:1rem;">
+          The half-life of a job skill is now estimated at <strong style="color:white;">less than 5 years</strong> in technology-adjacent fields. Career agility is not about predicting the future — it is about building the capacity to adapt to it.
+        </p>
+        <p class="body light">
+          The concepts in this course are tools for career agility. Being able to evaluate blockchain, XR, or quantum computing does not mean you must work in those fields — it means you will not be surprised or displaced by them.
+        </p>
+      </div>
+      <div>
+        <div class="pillar-row" style="grid-template-columns:1fr;margin-top:0;">
+          <div class="pillar">
+            <div class="pillar-icon">🔍</div>
+            <h4>Scan Continuously</h4>
+            <p>Follow emerging technology through trusted sources (Gartner, MIT Tech Review, CB Insights). Build a habit of curious observation, not passive consumption.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon">🧪</div>
+            <h4>Experiment Early</h4>
+            <p>Early Adopters shape how technologies are used. Use the Adoption Lifecycle — identify when to experiment (Early Majority phase) before your industry demands it.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon">🔗</div>
+            <h4>Build Adjacent Skills</h4>
+            <p>Combine domain expertise with digital fluency. A marketer who understands AI, or an accountant who understands blockchain, is exponentially more valuable.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SLIDE 14 — CLOSING / SUMMARY -->
+<!-- ══════════════════════════════════════════ -->
+<section class="slide bg-navy" id="slide-14" data-label="Summary">
+  <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(79,142,247,.08) 1px,transparent 1px);background-size:42px 42px;pointer-events:none;"></div>
+  <div style="position:absolute;bottom:-15%;left:-5%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,.08) 0%,transparent 70%);pointer-events:none;"></div>
+  <div class="slide-inner">
+    <div class="slide-num light">13 / Bringing It Together</div>
+    <h2 class="title light" style="margin-bottom:.5rem;">Your Technology Evaluation <span style="color:var(--teal);">Toolkit</span></h2>
+    <p class="body light" style="max-width:640px;margin-bottom:2rem;">Apply these five questions to every emerging technology you encounter. The concepts you learned today are the vocabulary that powers each step.</p>
+
+    <div class="closing-grid">
+      <div class="closing-card">
+        <div class="num" style="color:var(--blue);">1</div>
+        <h4>Define It</h4>
+        <p>Emerging Technology · Digital Fluency</p>
+      </div>
+      <div class="closing-card">
+        <div class="num" style="color:var(--teal);">2</div>
+        <h4>Locate It</h4>
+        <p>Hype Cycle · Adoption Lifecycle</p>
+      </div>
+      <div class="closing-card">
+        <div class="num" style="color:var(--amber);">3</div>
+        <h4>Map Impact</h4>
+        <p>Disruptive Innovation · Blockchain · XR</p>
+      </div>
+      <div class="closing-card">
+        <div class="num" style="color:var(--rose);">4</div>
+        <h4>Assess Timeline</h4>
+        <p>Technology Roadmap · Quantum Computing</p>
+      </div>
+      <div class="closing-card">
+        <div class="num" style="color:var(--violet);">5</div>
+        <h4>Build Fluency</h4>
+        <p>Digital Fluency · Career Agility</p>
+      </div>
+    </div>
+
+    <div style="margin-top:2.5rem;padding:1.5rem 2rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:.65rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;">Your Assignment</div>
+        <p style="font-size:.95rem;color:rgba(255,255,255,.8);line-height:1.65;">Pick one emerging technology not covered today. Apply all five framework questions. Present your evaluation to the class.</p>
+      </div>
+      <div style="font-size:2.5rem;flex-shrink:0;">🚀</div>
+    </div>
+
+    <p style="font-size:.72rem;color:rgba(255,255,255,.2);margin-top:2rem;text-align:center;">Gonzaga University · School of Business Administration · Emerging Technology for Business Leaders</p>
+  </div>
+</section>
+
+<!-- ── JAVASCRIPT ── -->
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsContainer = document.getElementById('navDots');
+
+  // Build dots
+  slides.forEach((slide, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-dot';
+    btn.title = slide.dataset.label || `Slide ${i + 1}`;
+    btn.addEventListener('click', () => slide.scrollIntoView({ behavior: 'smooth' }));
+    dotsContainer.appendChild(btn);
+  });
+
+  const dots = dotsContainer.querySelectorAll('.nav-dot');
+
+  // IntersectionObserver for active dot
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(slides).indexOf(entry.target);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.4 });
+
+  slides.forEach(s => observer.observe(s));
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    const active = [...dots].findIndex(d => d.classList.contains('active'));
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      const next = slides[Math.min(active + 1, slides.length - 1)];
+      if (next) next.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      const prev = slides[Math.max(active - 1, 0)];
+      if (prev) prev.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+</script>
+</body>
+</html>
