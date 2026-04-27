@@ -898,45 +898,103 @@
   </div>
 </section>
 
+<!-- ── SLIDE NAV BAR ── -->
+<div id="slideNav" style="
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .75rem 2rem;
+  background: rgba(15,22,41,.88); backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255,255,255,.08);
+  gap: 1rem;
+">
+  <button id="btnPrev" onclick="navigate(-1)" style="
+    display: flex; align-items: center; gap: .6rem;
+    padding: .55rem 1.25rem; border-radius: 8px; border: 1px solid rgba(255,255,255,.15);
+    background: rgba(255,255,255,.07); color: rgba(255,255,255,.8);
+    font-family: inherit; font-size: .82rem; font-weight: 600;
+    cursor: pointer; transition: all .15s; white-space: nowrap;
+  ">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Previous
+  </button>
+
+  <div style="display:flex;align-items:center;gap:.75rem;min-width:0;">
+    <span id="slideCounter" style="font-size:.72rem;color:rgba(255,255,255,.35);font-weight:600;white-space:nowrap;">1 / 14</span>
+    <span id="slideLabel" style="font-size:.82rem;color:rgba(255,255,255,.65);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+  </div>
+
+  <button id="btnNext" onclick="navigate(1)" style="
+    display: flex; align-items: center; gap: .6rem;
+    padding: .55rem 1.25rem; border-radius: 8px; border: none;
+    background: #4f8ef7; color: white;
+    font-family: inherit; font-size: .82rem; font-weight: 600;
+    cursor: pointer; transition: all .15s; white-space: nowrap;
+  ">
+    Next
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+</div>
+
+<!-- bottom padding so last slide content isn't hidden behind nav bar -->
+<div style="height:60px;background:var(--navy);"></div>
+
 <!-- ── JAVASCRIPT ── -->
 <script>
   const slides = document.querySelectorAll('.slide');
   const dotsContainer = document.getElementById('navDots');
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+  const slideCounter = document.getElementById('slideCounter');
+  const slideLabel = document.getElementById('slideLabel');
+  let currentIdx = 0;
 
   // Build dots
   slides.forEach((slide, i) => {
     const btn = document.createElement('button');
     btn.className = 'nav-dot';
     btn.title = slide.dataset.label || `Slide ${i + 1}`;
-    btn.addEventListener('click', () => slide.scrollIntoView({ behavior: 'smooth' }));
+    btn.addEventListener('click', () => goTo(i));
     dotsContainer.appendChild(btn);
   });
 
   const dots = dotsContainer.querySelectorAll('.nav-dot');
 
-  // IntersectionObserver for active dot
+  function goTo(idx) {
+    idx = Math.max(0, Math.min(idx, slides.length - 1));
+    slides[idx].scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function navigate(dir) { goTo(currentIdx + dir); }
+
+  function updateNav(idx) {
+    currentIdx = idx;
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    slideCounter.textContent = `${idx + 1} / ${slides.length}`;
+    slideLabel.textContent = slides[idx].dataset.label || '';
+    btnPrev.style.opacity = idx === 0 ? '.35' : '1';
+    btnPrev.style.pointerEvents = idx === 0 ? 'none' : 'auto';
+    btnNext.textContent = '';
+    btnNext.innerHTML = idx === slides.length - 1
+      ? 'Finish <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>'
+      : 'Next <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+  }
+
+  // IntersectionObserver
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        const idx = Array.from(slides).indexOf(entry.target);
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        updateNav(Array.from(slides).indexOf(entry.target));
       }
     });
   }, { threshold: 0.4 });
 
   slides.forEach(s => observer.observe(s));
+  updateNav(0);
 
   // Keyboard navigation
   document.addEventListener('keydown', e => {
-    const active = [...dots].findIndex(d => d.classList.contains('active'));
-    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-      const next = slides[Math.min(active + 1, slides.length - 1)];
-      if (next) next.scrollIntoView({ behavior: 'smooth' });
-    }
-    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-      const prev = slides[Math.max(active - 1, 0)];
-      if (prev) prev.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') navigate(1);
+    if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  navigate(-1);
   });
 </script>
 </body>
